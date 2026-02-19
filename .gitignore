@@ -33,11 +33,11 @@ venv.bak/
 
 # Environment / secret files
 .env
-.env.*
 settings.TOML
 settings.toml
-settings.example.TOML
-settings.example.toml
+# Keep .env.example and settings.example.TOML as templates
+!.env.example
+!settings.example.TOML
 
 # Installer logs
 pip-log.txt

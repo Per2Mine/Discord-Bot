@@ -57,7 +57,15 @@ Hinweis: Je nach Distribution kann das Paket anders heißen. In Container-Umgebu
 ## Installation & Setup
 
 1. Repository klonen oder in deinen Projektordner kopieren.
-2. In `settings.TOML` deinen Bot-Token eintragen:
+2. **Bot-Token konfigurieren:**
+   
+   **Option A: Umgebungsvariable (empfohlen für Docker/Production)**
+   ```bash
+   export DISCORD_TOKEN="<DEIN_BOT_TOKEN>"
+   ```
+   
+   **Option B: settings.TOML (für lokale Entwicklung)**
+   In `settings.TOML` deinen Bot-Token eintragen:
 
 ```toml
 [bot]
@@ -70,6 +78,8 @@ pause_idle_timeout = 300     # Sekunden: Trennen nach zu langer Pause
 skip_required = 1
 skip_use_majority = false
 ```
+
+> **Hinweis:** Der Bot prüft zuerst die Umgebungsvariable `DISCORD_TOKEN`. Falls diese nicht gesetzt ist, wird der Token aus `settings.TOML` gelesen.
 
 3. Alias-Befehle anpassen (unter `[commands]`) – Beispiel:
 
@@ -164,18 +174,47 @@ Das Skript liest `settings.TOML` und entfernt Slash-Commands aus dem konfigurier
 
 ## Docker / Deployment Hinweise
 
-Für Container-Images stelle sicher, dass `ffmpeg` und `opus` verfügbar sind. Beispiel `Dockerfile`-Snippet (Debian/Ubuntu base):
+### Docker Compose (empfohlen)
 
-```dockerfile
-FROM python:3.11-slim
-RUN apt-get update && apt-get install -y ffmpeg libopus0 && rm -rf /var/lib/apt/lists/*
-WORKDIR /app
-COPY . /app
-RUN python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
-CMD [".venv/bin/python","bot.py"]
+Der Bot kann einfach mit Docker Compose gestartet werden. Der Discord-Token wird über eine Umgebungsvariable übergeben:
+
+1. Erstelle eine `.env` Datei im Projektverzeichnis (basierend auf `.env.example`):
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Trage deinen Discord-Token in `.env` ein:
+   ```env
+   DISCORD_TOKEN=dein_echter_discord_token
+   ```
+
+3. Starte den Bot mit Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Logs anzeigen:
+   ```bash
+   docker-compose logs -f
+   ```
+
+5. Bot stoppen:
+   ```bash
+   docker-compose down
+   ```
+
+Der Bot liest den Token automatisch aus der Umgebungsvariable `DISCORD_TOKEN`. Falls diese nicht gesetzt ist, wird als Fallback die `settings.TOML` verwendet.
+
+### Manuelles Docker Build
+
+Alternativ kannst du das Image auch manuell bauen und starten:
+
+```bash
+docker build -t discord-bot .
+docker run -e DISCORD_TOKEN=dein_token discord-bot
 ```
 
-Passe das Image an dein Deployment und Secrets-Management an (do not hardcode tokens in images).
+**Wichtig:** Das Image enthält bereits `ffmpeg` und `libopus0`. Hardcode niemals deinen Token im Image oder in `settings.TOML` wenn du das Image teilst.
 
 ## Weiterentwicklung
 

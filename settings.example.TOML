@@ -1,0 +1,27 @@
+title = "Example Bot Settings"
+
+[bot]
+# Replace with your bot token when running locally; do NOT commit real token
+token = "REPLACE_WITH_YOUR_BOT_TOKEN"
+# Command prefix used by the bot. Change to "/" or "!" or whatever you prefer.
+prefix = "/"
+# Optional: fast dev guild to sync slash commands
+test_guild_id = ""
+application_id = ""
+# How long (seconds) the bot stays in voice channel when idle (queue empty).
+# -1 = stay forever. Default: 120 seconds.
+idle_timeout = 120
+# How long (seconds) the bot stays in voice channel when paused.
+# -1 = stay forever. Default: 300 seconds.
+pause_idle_timeout = 300
+# Skip configuration
+skip_required = 1
+skip_use_majority = false
+
+[commands]
+play = ["play", "p", "spielen"]
+pause = ["pause", "pausieren"]
+skip = ["skip", "next"]
+help = ["help", "hilfe"]
+hello = ["hello", "hi"]
+playlist = ["playlist", "pl"]

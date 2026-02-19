@@ -6,12 +6,14 @@ from discord import app_commands
 from discord.ui import View, button
 import re
 import asyncio
+import os
 from utils import load_settings
 from services.youtube import extract_youtube, extract_playlist
 from services.spotify import is_spotify_url, resolve_spotify_title
 
 settings = load_settings()
-BOT_TOKEN = settings["bot"]["token"] if settings else ""
+# Prefer environment variable for token (e.g., in Docker), fallback to settings file
+BOT_TOKEN = os.environ.get("DISCORD_TOKEN") or (settings["bot"]["token"] if settings else "")
 PREFIX = "/"
 COMMANDS = {}
 if settings:
