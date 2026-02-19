@@ -15,5 +15,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Kopiere deinen restlichen Code (bot.py)
 COPY . .
 
+# Falls settings.TOML nicht existiert, nutze settings.example.TOML als Fallback
+RUN if [ ! -f settings.TOML ]; then \
+        echo "settings.TOML not found, using settings.example.TOML"; \
+        cp settings.example.TOML settings.TOML; \
+    fi
+
 # Befehl, der ausgeführt wird, wenn der Container startet
 CMD ["python", "bot.py"]
